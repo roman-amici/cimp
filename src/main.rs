@@ -1,18 +1,15 @@
+use parser::Parser;
 use scanner::scan;
 
+mod ast;
+mod parser;
 mod scanner;
 mod token;
 
 fn main() {
-    let tokens = scan(
-        "x==3 + fn else topoi // skljdfklsdaf sklfsjkdfk\n != [] sdlkdfs1kjsdflk 0.123 1234",
-        "files",
-    );
+    let tokens = scan("x * y + z", "files");
 
-    for token in tokens {
-        println!(
-            "{:?} - {:?}({})",
-            token.token_type, token.literal, token.line
-        )
-    }
+    let mut parser = Parser::new(tokens);
+
+    let tree = parser.parse_expression().unwrap();
 }

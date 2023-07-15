@@ -44,7 +44,8 @@ pub enum TokenType {
 
     Number,
     Identifier,
-    // TODO: strings?
+
+    EOF, // TODO: strings?
 }
 
 #[derive(Clone, Debug)]

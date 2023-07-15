@@ -96,6 +96,14 @@ impl Scanner {
                         Some(self.make_token(TokenType::Less))
                     }
                 }
+                '!' => {
+                    if self.peek() == '=' {
+                        self.next_char();
+                        Some(self.make_token(TokenType::Bang))
+                    } else {
+                        Some(self.make_token(TokenType::BangEqual))
+                    }
+                }
                 '&' => {
                     if self.peek() == '&' {
                         self.next_char();

@@ -99,9 +99,9 @@ impl Scanner {
                 '!' => {
                     if self.peek() == '=' {
                         self.next_char();
-                        Some(self.make_token(TokenType::Bang))
-                    } else {
                         Some(self.make_token(TokenType::BangEqual))
+                    } else {
+                        Some(self.make_token(TokenType::Bang))
                     }
                 }
                 '&' => {

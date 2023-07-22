@@ -117,11 +117,15 @@ impl Parser {
         match self.peek_type() {
             TokenType::Identifier => Ok(Expr::Identifier(Identifier {
                 token: self.consume(TokenType::Identifier)?,
+                resolution: None,
+                type_info: None,
             })),
             TokenType::Number => Ok(Expr::Number(Number {
                 token: self.consume(TokenType::Number)?,
+                type_info: None,
             })),
             TokenType::LeftParen => {
+                self.consume(TokenType::LeftParen)?;
                 let expr = self.parse_expression()?;
                 self.consume(TokenType::RightParen)?;
                 Ok(expr)
@@ -184,7 +188,7 @@ impl Parser {
             TokenType::Bang,
             TokenType::At,
         ]) {
-            let expr = self.parse_call_expression()?;
+            let expr = self.parse_expression()?;
             Ok(Expr::Unary(Unary {
                 token: operator.clone(),
                 op: operator,
@@ -236,6 +240,7 @@ impl Parser {
             TokenType::GreaterEqual,
             TokenType::LessEqual,
             TokenType::EqualEqual,
+            TokenType::BangEqual,
         ]) {
             let right = self.parse_addition_subtraction_expression()?;
             left = Expr::Binary(Binary {
@@ -300,7 +305,7 @@ impl Parser {
         self.parse_assign_expression()
     }
 
-    fn parse_statement(&mut self) -> Result<Statement, ParserError> {
+    pub fn parse_statement(&mut self) -> Result<Statement, ParserError> {
         match self.peek_type() {
             TokenType::Let => self.parse_let_statement(),
             TokenType::LeftCurly => self.parse_block_statement(),
@@ -428,11 +433,14 @@ impl Parser {
             None
         };
 
+        self.consume(TokenType::Semicolon)?;
+
         Ok(Statement::LetStatement(LetStatement {
             token,
             variable_name,
             type_name,
             initializer,
+            type_info: None,
         }))
     }
 

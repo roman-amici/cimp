@@ -1,4 +1,4 @@
-use crate::token::Token;
+use crate::{token::Token, type_checker::Type};
 
 type ExprPtr = Box<Expr>;
 
@@ -14,10 +14,20 @@ pub enum Expr {
 
 pub struct Number {
     pub token: Token,
+
+    pub type_info: Option<Type>,
+}
+
+pub struct Resolution {
+    pub scope_index: usize,
+    pub slot_index: usize,
 }
 
 pub struct Identifier {
     pub token: Token,
+
+    pub resolution: Option<Resolution>,
+    pub type_info: Option<Type>,
 }
 
 pub struct Unary {
@@ -107,6 +117,8 @@ pub struct LetStatement {
     pub variable_name: Token,
     pub type_name: Option<Token>,
     pub initializer: Option<ExprPtr>,
+
+    pub type_info: Option<Box<Type>>,
 }
 
 pub struct ReturnStatement {
